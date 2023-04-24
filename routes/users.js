@@ -120,7 +120,7 @@ router.post('/password/change', (req, res)=> {
         });
 });
 
-// Routes to handle forgot password
+// Routes to handle forgot password 
 router.post('/forgot', (req, res, next)=> {
     let recoveryPassword = '';
     async.waterfall([

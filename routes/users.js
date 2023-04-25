@@ -271,4 +271,20 @@ router.put('/edit/:id', (req, res)=> {
     })
 })
 
+//Delete Route
+router.delete('/delete/user/:id', (req, res)=>{
+    let searchQuery = {_id : req.params.id};
+
+    User.deleteOne(searchQuery)
+    .then(user => {
+        req.flash('success_msg', 'User deleted successfully');
+        res(redirect('/users/all'));
+    })
+    .catch(err => {
+        req.flash('error_msg', 'ERROR: ' +err);
+        res.redirect('/users/all');
+    }) 
+})
+
+
 module.exports = router;

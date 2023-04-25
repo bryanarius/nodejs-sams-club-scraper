@@ -24,7 +24,7 @@ router.get('/login', (req,res)=> {
     res.render('./users/login');
 });
 
-router.get('/signup', (req,res)=> {
+router.get('/signup', isAuthenticatedUser,(req,res)=> {
     res.render('./users/signup');
 });
 
@@ -59,10 +59,10 @@ router.get('/reset/:token', (req, res)=> {
 });
 
 router.get('/password/change', isAuthenticatedUser, (req, res)=> {
-    res.render('changepassword');
+    res.render('./users/changepassword');
 });
 
-router.get('/users/all', (req, res)=> {
+router.get('/users/all', isAuthenticatedUser, (req, res)=> {
     User.find({})
         .then(users => {
             res.render('./users/alluser', {users : users})
@@ -72,7 +72,7 @@ router.get('/users/all', (req, res)=> {
         })
 })
 
-router.get('/edit/:id', (req,res)=> {
+router.get('/edit/:id', isAuthenticatedUser,(req,res)=> {
     let searchQuery = {_id : req.params.id};
     User.findOne(searchQuery)
     .then(user => {
@@ -92,7 +92,7 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 
-router.post('/signup', (req, res)=> {
+router.post('/signup', isAuthenticatedUser, (req, res)=> {
     let {name, email, password} = req.body;
 
     let userData = {
@@ -124,7 +124,7 @@ router.post('/password/change', (req, res)=> {
                 user.save()
                     .then(user => {
                         req.flash('success_msg', 'Password changed successfully.');
-                        res.redirect('/dashboard');
+                        res.redirect('/password/change');
                     })
                     .catch(err => {
                         req.flash('error_msg', 'ERROR: '+err);

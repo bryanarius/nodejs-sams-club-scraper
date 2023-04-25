@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const async = require('async');
 const nodemailer = require('nodemailer');
 
+
+
 //Requiring user model
 const User = require('../models/usermodel');
 
@@ -68,6 +70,18 @@ router.get('/users/all', (req, res)=> {
         .catch(err =>{
             console.log(err)
         })
+})
+
+router.get('/edit/:id', (req,res)=> {
+    let searchQuery = {_id : req.params.id};
+    User.findOne(searchQuery)
+    .then(user => {
+        res.render('./users/edituser', {user : user});
+    })
+    .catch(err => {
+        req.flash('error_msg', 'ERROR: ' +err);
+        res.redirect('/users/all');
+    })
 })
 
 //POST routes
@@ -236,5 +250,25 @@ router.post('/reset/:token', (req, res)=>{
         res.redirect('/login');
     });
 });
+
+
+
+//Put Routes 
+
+router.put('/edit/:id', (req, res)=> {
+    let searchQuery = {_id : req.params.id};
+    User.updateOne(searchQuery, {$set : {
+        name : req.body.name,
+        email : req.body.email
+    }})
+    .then(user => {
+        req.flash('success_msg', 'User updated successfully');
+        res(redirect('/users/all'));
+    })
+    .catch(err => {
+        req.flash('error_msg', 'ERROR: ' +err);
+        res.redirect('/users/all');
+    })
+})
 
 module.exports = router;

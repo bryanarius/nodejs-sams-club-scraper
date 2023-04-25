@@ -7,8 +7,10 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
+const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+
 
 //Requiring user route
 const userRoutes = require('./routes/users');
@@ -35,6 +37,9 @@ app.use(passport.session());
 passport.use(new LocalStrategy({usernameField : 'email'}, User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+//Middleware for Method Override
+app.use(methodOverride('_method'));
 
 
 //middleware flash messages

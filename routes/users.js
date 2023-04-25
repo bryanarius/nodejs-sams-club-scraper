@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 //Requiring user model
 const User = require('../models/usermodel');
 
-// Checks if user is authenticated
+// Checks if user is authenticated!
 function isAuthenticatedUser(req, res, next) {
     if(req.isAuthenticated()) {
         return next();

@@ -14,6 +14,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 //Requiring user route
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/admin');
 
 //Requiring user model
 const User = require('./models/usermodel');
@@ -60,6 +61,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 app.use(userRoutes);
+app.use(adminRoutes);
 
 app.listen(process.env.PORT, ()=> {
     console.log('Server is started');

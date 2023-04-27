@@ -56,7 +56,7 @@ async function scrapeData(url, page) {
         console.log(error)
     }
 }
-
+// Get Routes
 router.get('/product/new', isAuthenticatedUser, async(req, res)=> {
     try {
         let url = req.query.search;
@@ -85,6 +85,37 @@ router.get('/product/new', isAuthenticatedUser, async(req, res)=> {
         res.redirect('/product/new');
     }
 });
+
+//POST routes
+
+router.post('/product/new', isAuthenticatedUser, (req,res)=> {
+    let {title, price, url, sku} = req.body
+
+    let newProduct = {
+        title : title,
+        newprice : price,
+        sku : sku,
+        url : url
+    };
+
+    product.findOne({ sku : sku})
+    .then(product => {
+        if(product) {
+            req.flash('error_msg', 'Product already exist in the database')
+            return res.redirect('/product/new');
+        }
+
+        product.create(newProduct)
+            .then(product => {
+                req.flash('success_msg', 'Product added successfully in the database')
+                return res.redirect('/product/new');
+            })
+    })
+    .catch(err => {
+        req.flash('error_msg', 'ERROR: ' +err);
+        res.redirect('/product/new');
+    })
+})
 
 
 module.exports = router

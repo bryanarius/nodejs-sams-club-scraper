@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-let productScheme = new mongoose.SchemaType({
+let productScheme = new mongoose.Schema({
     title : String,
     newprice : String,
     oldprice : String,

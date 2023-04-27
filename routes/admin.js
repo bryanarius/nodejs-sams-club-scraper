@@ -15,10 +15,11 @@ function isAuthenticatedUser(req, res, next) {
     res.redirect('/login');
 }
 
+let browser;
 // Scrape function
 async function scrapeData(url, page) {
     try {
-        await page.goto(url, {waitUntil:FontFaceSetLoadEvent, timeout : 0});
+        await page.goto(url, {waitUntil:'load', timeout : 0});
         const html = await page.evaluate(()=> document.body.innerHTML);
         const $ = await cheerio.load(html);
 
@@ -55,6 +56,35 @@ async function scrapeData(url, page) {
         console.log(error)
     }
 }
+
+router.get('/product/new', isAuthenticatedUser, async(req, res)=> {
+    try {
+        let url = req.query.search;
+        if(url) { 
+            browser = puppeteer.launch({headless : flase});
+            const page = (await browser).newPage();
+            let result = await scrapeData(url,page);
+            let productData = {
+                title : result.title,
+                price : '$' +result.price,
+                productUrl : result.url
+            };
+            res.render('./admin/newproduct', {productData : productData});
+            browser.close()
+        } else {
+            let productData = {
+                title : "",
+                price : "",
+                productUrl : ""
+            };
+            res.render('./admin/newproduct', {productData : productData});
+        }
+        
+    } catch(error) {
+        req.flash('error_msg', 'ERROR: ' +err);
+        res.redirect('/product/new');
+    }
+});
 
 
 module.exports = router

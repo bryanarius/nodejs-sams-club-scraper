@@ -47,7 +47,7 @@ async function scrapeData(url, page) {
         return {
             title,
             price,
-            // outOfStock,
+            outOfStock,
             // deliveryNotAvailable,
             url
         }
@@ -104,6 +104,28 @@ router.get('/product/search', isAuthenticatedUser, (req,res)=> {
     } else {
         res.render('./admin/search', {productData : ''})
     }
+})
+
+router.get('/products/instock', isAuthenticatedUser, (req, res)=> {
+    product.find({newstock : "In stock"})
+        .then(products => {
+            res.render('./admin/instock', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
+})
+
+router.get('/products/outofstock', isAuthenticatedUser, (req, res)=> {
+    product.find({newstock : "Out of stock"})
+        .then(products => {
+            res.render('./admin/instock', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
 })
 //POST routes
 

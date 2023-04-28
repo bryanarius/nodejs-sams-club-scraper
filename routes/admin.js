@@ -120,7 +120,7 @@ router.get('/products/instock', isAuthenticatedUser, (req, res)=> {
 router.get('/products/outofstock', isAuthenticatedUser, (req, res)=> {
     product.find({newstock : "Out of stock"})
         .then(products => {
-            res.render('./admin/instock', {products : products});
+            res.render('./admin/outofstock', {products : products});
         })
         .catch(err => {
             req.flash('error_msg', 'ERROR:' +err)

@@ -127,6 +127,28 @@ router.get('/products/outofstock', isAuthenticatedUser, (req, res)=> {
             res.redirect('/dahboard')
         })
 })
+
+router.get('/products/pricechanged', isAuthenticatedUser, (req, res)=> {
+    product.find({})
+        .then(products => {
+            res.render('./admin/pricechanged', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
+});
+
+router.get('/products/backinstock', isAuthenticatedUser, (req, res)=> {
+    product.find({$and: [{oldstock: 'Out of stock'}, {newstock : 'In stock'}]})
+        .then(products => {
+            res.render('./admin/pricechanged', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
+});
 //POST routes
 
 router.post('/product/new', isAuthenticatedUser, (req,res)=> {

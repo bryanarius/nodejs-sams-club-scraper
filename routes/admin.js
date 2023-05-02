@@ -57,6 +57,13 @@ async function scrapeData(url, page) {
     }
 }
 // Get Routes
+router.get('/dashboard', isAuthenticatedUser,(req,res)=> {
+    product.find({})
+        .then(products => {
+            res.render('./admin/dashboard', {products : products});
+        })
+});
+
 router.get('/product/new', isAuthenticatedUser, async(req, res)=> {
     try {
         let url = req.query.search;
@@ -149,6 +156,28 @@ router.get('/products/backinstock', isAuthenticatedUser, (req, res)=> {
             res.redirect('/dahboard')
         })
 });
+
+router.get('/products/updated', isAuthenticatedUser, (req, res)=> {
+    product.find({updatestatus : "Updated"})
+        .then(products => {
+            res.render('./admin/updatedproducts', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
+})
+
+router.get('/products/notupdated', isAuthenticatedUser, (req, res)=> {
+    product.find({updatestatus : "Not Updated"})
+        .then(products => {
+            res.render('./admin/notupdatedproducts', {products : products});
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR:' +err)
+            res.redirect('/dahboard')
+        })
+})
 //POST routes
 
 router.post('/product/new', isAuthenticatedUser, (req,res)=> {
@@ -157,8 +186,12 @@ router.post('/product/new', isAuthenticatedUser, (req,res)=> {
     let newProduct = {
         title : title,
         newprice : price,
+        oldprice : price,
+        newstock : stock,
+        oldstock : stock,
         sku : sku,
-        url : url
+        url : url,
+        updatestatus : "Updated"
     };
 
     product.findOne({ sku : sku})

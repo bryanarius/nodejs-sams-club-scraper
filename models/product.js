@@ -8,7 +8,7 @@ let productScheme = new mongoose.Schema({
     oldstock : String,
     sku : String,
     url : String,
-    updatestatuc : String,
+    updatestatus : String,
 });
 
 module.exports = mongoose.model('Product', productScheme);

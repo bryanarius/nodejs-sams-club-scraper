@@ -28,10 +28,6 @@ router.get('/signup', isAuthenticatedUser,(req,res)=> {
     res.render('./users/signup');
 });
 
-router.get('/dashboard', isAuthenticatedUser,(req,res)=> {
-    res.render('./users/dashboard');
-});
-
 router.get('/logout', isAuthenticatedUser,(req, res)=> {
     req.logOut();
     req.flash('success_msg', 'You have been logged out.');

@@ -178,6 +178,10 @@ router.get('/products/notupdated', isAuthenticatedUser, (req, res)=> {
             res.redirect('/dahboard')
         })
 })
+
+router.get('/update', isAuthenticatedUser, (req,res)=> {
+    res.render('./admin/update', {message : ''});
+});
 //POST routes
 
 router.post('/product/new', isAuthenticatedUser, (req,res)=> {
@@ -212,6 +216,40 @@ router.post('/product/new', isAuthenticatedUser, (req,res)=> {
         res.redirect('/product/new');
     })
 })
+
+router.post('/update', isAuthenticatedUser, async(req, res)=>{
+    try {
+        res.render('./admin/update', {message: 'update started.'});
+
+        Product.find({})
+            .then(async products => {
+                for(let i=0; i<products.length; i++) {
+                    Product.updateOne({'url' : products[i].url}, {$set: {'oldprice' : products[i].newprice, 'oldstock' : products[i].newstock, 'updatestatus' : 'Not Updated'}})
+                        .then(products => {})
+                }
+
+                browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+                const page = await browser.newPage();
+
+                for(let i=0; i<products.length; i++) {
+                    let result = await scrapeData(products[i].url,page);
+                    Product.updateOne({'url' : products[i].url}, {$set: {'title' : result.title, 'newprice' : '$'+result.price, 'newstock' : result.stock, 'updatestatus' : 'Updated'}})
+                        .then(products => {})
+                }
+
+                browser.close();
+
+            })
+            .catch(err => {
+                req.flash('error_msg', 'ERROR: '+err);
+                res.redirect('/dashboard');
+            });
+        
+    } catch (error) {
+        req.flash('error_msg', 'ERROR: '+err);
+        res.redirect('/dashboard');
+    }
+});
 
 
 module.exports = router

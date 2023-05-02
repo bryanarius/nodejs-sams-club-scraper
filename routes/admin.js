@@ -255,6 +255,22 @@ router.post('/update', isAuthenticatedUser, async(req, res)=>{
     }
 });
 
+//Delete route
+router.delete('/delete/product/:id', isAuthenticatedUser, (req,res)=> {
+    let searchQuery = {_id : req.params.id};
+
+    product.deleteOne(searchQuery)
+        .then(product => {
+            req.flash('success_msg', 'Product Deleted Successfully'+err);
+            res.redirect('/dashboard');
+
+        })
+        .catch(err => {
+            req.flash('error_msg', 'ERROR: '+err);
+            res.redirect('/dashboard');
+        })
+})
+
 router.get('*', (req,res)=> {
     res.render('./admin/notfound');
 });

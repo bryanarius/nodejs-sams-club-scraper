@@ -57,6 +57,10 @@ async function scrapeData(url, page) {
     }
 }
 // Get Routes
+router.get('/', (req,res)=>{
+    res.render('index')
+});
+
 router.get('/dashboard', isAuthenticatedUser,(req,res)=> {
     product.find({})
         .then(products => {
@@ -221,7 +225,7 @@ router.post('/update', isAuthenticatedUser, async(req, res)=>{
     try {
         res.render('./admin/update', {message: 'update started.'});
 
-        Product.find({})
+        product.find({})
             .then(async products => {
                 for(let i=0; i<products.length; i++) {
                     Product.updateOne({'url' : products[i].url}, {$set: {'oldprice' : products[i].newprice, 'oldstock' : products[i].newstock, 'updatestatus' : 'Not Updated'}})
@@ -249,6 +253,10 @@ router.post('/update', isAuthenticatedUser, async(req, res)=>{
         req.flash('error_msg', 'ERROR: '+err);
         res.redirect('/dashboard');
     }
+});
+
+router.get('*', (req,res)=> {
+    res.render('./admin/notfound');
 });
 
 

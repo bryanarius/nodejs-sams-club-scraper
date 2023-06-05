@@ -72,7 +72,7 @@ router.get('/product/new', isAuthenticatedUser, async(req, res)=> {
     try {
         let url = req.query.search;
         if(url) { 
-            browser = puppeteer.launch({headless : flase});
+            browser = puppeteer.launch({ args: ['--no-sandbox'] });
             const page = (await browser).newPage();
             let result = await scrapeData(url,page);
             let productData = {

@@ -24,7 +24,7 @@ router.get('/login', (req,res)=> {
     res.render('./users/login');
 });
 
-router.get('/signup', isAuthenticatedUser,(req,res)=> {
+router.get('/signup',(req,res)=> {
     res.render('./users/signup');
 });
 
@@ -64,7 +64,8 @@ router.get('/users/all', isAuthenticatedUser, (req, res)=> {
             res.render('./users/alluser', {users : users})
         })
         .catch(err =>{
-            console.log(err)
+            req.flash('error_msg', 'ERROR: '+err);
+            res.redirect('/users/all');
         })
 })
 
@@ -88,7 +89,7 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 
-router.post('/signup', isAuthenticatedUser, (req, res)=> {
+router.post('/signup', (req, res)=> {
     let {name, email, password} = req.body;
 
     let userData = {

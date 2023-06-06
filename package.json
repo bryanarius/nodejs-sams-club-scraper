@@ -4,6 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "setup-production":"npm run install-client && npm run build-client && npm install",
+    "install-client":"cd client && npm install",
+    "build-client": "cd client && npm run build",
+    "server": "nodemon server --ignore client",
+    "client": "npm start --prefix client",
     "start": "node app.js"
   },
   "repository": {

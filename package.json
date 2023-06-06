@@ -4,10 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
-    "start": "node app.js",
+    
     "type": "git",
     "url": "git+https://github.com/bryanarius/nodejs-sams-club-scraper.git"
   },

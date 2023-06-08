@@ -48,7 +48,7 @@ async function scrapeData(url, page) {
             title,
             price,
             outOfStock,
-            // deliveryNotAvailable,
+            // deliveryNotAvailables,
             url
         }
 
